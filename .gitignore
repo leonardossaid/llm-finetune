@@ -1,0 +1,12 @@
+.venv/
+__pycache__/
+*.pyc
+.env
+.ipynb_checkpoints/
+wandb/
+outputs/
+checkpoints/
+*.safetensors
+*.bin
+*.gguf
+failures_*.json
