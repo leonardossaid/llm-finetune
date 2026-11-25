@@ -8,7 +8,7 @@ from peft import PeftModel
 import torch
 from transformers import AutoTokenizer, AutoModelForCausalLM
 
-from evalkit import CATEGORIES, DATAILED, DETAILED, classify, strip_fences, wilson
+from evalkit import CATEGORIES, DETAILED, classify, strip_fences, wilson
 from schema import score
 
 ap = argparse.ArgumentParser()
@@ -35,7 +35,7 @@ if args.adapter:
 model.eval()
 
 def prompt_for(row):
-    msg = row['messages'][:2]
+    msgs = row['messages'][:2]
     if args.prompt == 'detailed':
         msgs = [{'role': 'system', 'content': DETAILED}, msgs[1]]
     return tok.apply_chat_template(msgs, tokenize=False, add_generation_prompt=True)
@@ -50,10 +50,14 @@ failures = []
 t0 = time.time()
 for i in range(0, len(rows), args.batch):
     batch = rows[i:i + args.batch]
-    inputs = tok([prompt_for(r) for r in batch], return_tensors='pt', padding=True, add_special_tokens=False).to('cuda')
+    inputs = tok([prompt_for(r) for r in batch], return_tensors='pt',
+                 padding=True, add_special_tokens=False).to('cuda')
     with torch.no_grad():
         out = model.generate(**inputs, max_new_tokens=160, do_sample=False)
     texts = tok.batch_decode(out[:, inputs['input_ids'].shape[1]:], skip_special_tokens=True)
+    if i == 0:
+        print("PROMPT:\n", prompt_for(batch[0]))
+        print("RESPOSTA:\n", texts[0])
     for r, text in zip(batch, texts):
         gold = json.loads(r['messages'][2]['content'])
         s, l = score(text, gold), score(strip_fences(text), gold)
