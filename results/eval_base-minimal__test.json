@@ -1,0 +1,47 @@
+{
+  "kind": "eval",
+  "tag": "base-minimal",
+  "model": "Qwen/Qwen2.5-1.5B-Instruct",
+  "adapter": null,
+  "prompt": "minimal",
+  "data": "data/test.jsonl",
+  "n": 300,
+  "strict": {
+    "valid_json": 0.2833333333333333,
+    "valid_schema": 0.0,
+    "exact": 0.0
+  },
+  "lenient": {
+    "valid_json": 0.9066666666666666,
+    "valid_schema": 0.0,
+    "exact": 0.0
+  },
+  "exact_ci95": [
+    0.0,
+    0.012643429997735661
+  ],
+  "by_gold_actions": {
+    "0": {
+      "exact": 0.0,
+      "n": 70
+    },
+    "1": {
+      "exact": 0.0,
+      "n": 137
+    },
+    "2": {
+      "exact": 0.0,
+      "n": 71
+    },
+    "3": {
+      "exact": 0.0,
+      "n": 22
+    }
+  },
+  "error_categories": {
+    "format_fences": 187,
+    "format_invalid_json": 28,
+    "schema_invalid": 85
+  },
+  "seconds": 43.8
+}
